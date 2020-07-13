@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Survey Form{% endblock %}
+        
+    {% block content %}
+        <p>{{ que_num }}</p>
+        {% if que_num == '0' %}
+            <p>this is the first question</p>
+        {% endif %}
+        {% if que_num == '1' %}
+            <p>this is the second question</p>
+        {% endif %}
+    {% endblock %}
