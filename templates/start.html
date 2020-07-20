@@ -3,8 +3,8 @@
 {% block title %}Start{% endblock %}
         
     {% block content %}
-        <h1>{{ title }}</h1>
-        <p>{{ instructions }}</p>
+        <h1>{{ survey.title }}</h1>
+        <p>{{ survey.instructions }}</p>
         <form action="/questions/0">
         <button>Start!</button>
         </form>

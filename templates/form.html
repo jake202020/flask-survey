@@ -3,11 +3,11 @@
 {% block title %}Survey Form{% endblock %}
         
     {% block content %}
-        <p>{{ que_num }}</p>
-        {% if que_num == '0' %}
-            <p>this is the first question</p>
-        {% endif %}
-        {% if que_num == '1' %}
-            <p>this is the second question</p>
-        {% endif %}
+    <h1>{{ question.question }}</h1>
+    <form action="/answer" method="POST">
+      {% for choice in question.choices %}
+      <p><input type="radio" name="answer" value="{{ choice }}"> {{ choice }}</p>
+      {% endfor %}
+      <button>Continue</button>
+    </form>
     {% endblock %}
