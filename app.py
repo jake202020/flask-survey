@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, flash
 from surveys import satisfaction_survey as survey
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -29,7 +29,7 @@ def get_question(que_num):
 
     if (len(responses) != que_num):
         # Trying to access questions out of order.
-        # flash(f"Invalid question id: {qid}.")
+        flash(f"Invalid question id: {que_num}.")
         return redirect(f"/questions/{len(responses)}")
     
     question = survey.questions[que_num]
@@ -52,3 +52,9 @@ def handle_question():
     else:
         # logic in questions route for handling curr question num
         return redirect(f"/questions/{len(responses)}")
+
+@app.route("/complete")
+def complete():
+    """Survey complete. Show completion page."""
+
+    return render_template("complete.html")
