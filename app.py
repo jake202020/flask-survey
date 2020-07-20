@@ -1,14 +1,15 @@
-from flask import Flask, request, render_template, redirect, flash
+from flask import Flask, request, render_template, redirect, flash, session
 from surveys import satisfaction_survey as survey
 from flask_debugtoolbar import DebugToolbarExtension
 
+# key name to store answers in the session;
+RESPONSES_KEY = "responses"
+
 app = Flask(__name__)
-
 app.config['SECRET_KEY'] = "chickenzarecool21837"
-debug = DebugToolbarExtension(app)
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
-"""Store user responses"""
-responses = []
+debug = DebugToolbarExtension(app)
 
 @app.route('/')
 def survey_start():
@@ -16,9 +17,18 @@ def survey_start():
 
     return render_template('start.html', survey=survey)
 
+@app.route('/session', methods=["POST"])
+def start_session():
+    """Clear the session of responses."""
+    session[RESPONSES_KEY] = []
+
+    return redirect("/questions/0")
+
 @app.route('/questions/<int:que_num>')
 def get_question(que_num):
     """Display current survey question"""
+    responses = session.get(RESPONSES_KEY)
+
     if (responses is None):
         # trying to access question page too soon
         return redirect("/")
@@ -43,7 +53,9 @@ def handle_question():
     choice = request.form['answer']
 
     # add this response to the session
+    responses = session[RESPONSES_KEY]
     responses.append(choice)
+    session[RESPONSES_KEY] = responses
 
     if (len(responses) == len(survey.questions)):
         # survey is complete, thank you page
@@ -56,6 +68,7 @@ def handle_question():
 @app.route("/complete")
 def complete():
     """Survey complete. Show completion page."""
-
+    responses = session.get(RESPONSES_KEY)
+    
     questions = survey.questions
     return render_template("complete.html", responses=responses, questions=questions)
