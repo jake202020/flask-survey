@@ -57,4 +57,5 @@ def handle_question():
 def complete():
     """Survey complete. Show completion page."""
 
-    return render_template("complete.html")
+    questions = survey.questions
+    return render_template("complete.html", responses=responses, questions=questions)
